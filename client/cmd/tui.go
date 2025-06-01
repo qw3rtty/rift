@@ -25,7 +25,7 @@ var tuiCmd = &cobra.Command{
 		logView = tview.NewTextView()
 		logView.SetTitle("Logs").SetBorder(true)
         
-		input := tview.NewInputField().SetLabel("Task > ")
+		input := tview.NewInputField().SetLabel("Command > ")
 
         flex := tview.NewFlex().
             AddItem(agentsList, 0, 1, true).
@@ -78,7 +78,7 @@ var tuiCmd = &cobra.Command{
             }
         })
 
-        if err := app.SetRoot(flex, true).Run(); err != nil {
+        if err := app.SetRoot(flex, true).SetFocus(input).Run(); err != nil {
             log.Fatal(err)
         }
     },
