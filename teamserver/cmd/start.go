@@ -1,0 +1,37 @@
+package cmd
+
+import (
+	"fmt"
+	"time"
+	"teamserver/server"
+	"github.com/spf13/cobra"
+)
+
+var port int
+
+var serverCmd = &cobra.Command{
+	Use:   "server",
+	Short: "Starting the protal server...",
+	Run: func(cmd *cobra.Command, args []string) {
+		fmt.Printf("[+] Starting the portal server on port %d (WebSocket)\n", port)
+
+		// Starte Logging-Goroutine für aktive Agents
+		go func() {
+			for {
+				time.Sleep(10 * time.Second)
+				agents := server.Manager.List()
+				fmt.Printf("[#] Active Agents: %d\n", len(agents))
+				for _, a := range agents {
+					fmt.Printf("    ID: %s | IP: %s | LastSeen: %s\n", a.ID, a.IP, a.LastSeen.Format(time.RFC3339))
+				}
+			}
+		}()
+
+		server.StartWebSocketServer(port)
+	},
+}
+
+func init() {
+	serverCmd.Flags().IntVarP(&port, "port", "p", 8080, "Port of the portal server")
+	riftCli.AddCommand(serverCmd)
+}
