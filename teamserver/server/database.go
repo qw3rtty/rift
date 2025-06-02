@@ -12,19 +12,84 @@ var db *sql.DB
 
 func InitDB() {
 	var err error
-	db, err = sql.Open("sqlite", "./agents.db")
+	db, err = sql.Open("sqlite", "./rift.db")
 	if err != nil {
 		log.Fatal("Database error:", err)
 	}
 
-	createTable := `
+	createClientTable()
+	createAgentTable()
+}
+
+// ------------------------------------
+// -- Client related functions
+// ------------------------------------
+func createClientTable() {
+	table := `
+	CREATE TABLE IF NOT EXISTS clients (
+		id TEXT PRIMARY KEY,
+		ip TEXT,
+		user_agent TEXT,
+		last_seen TEXT
+	);`
+	_, err := db.Exec(table)
+	if err != nil {
+		log.Fatal("Error on creating 'clients' table:", err)
+	}
+}
+
+func SaveClientToDB(client *Client) {
+	stmt := `
+	INSERT OR REPLACE INTO clients(id, ip, user_agent, last_seen)
+	VALUES (?, ?, ?, ?);`
+	_, err := db.Exec(stmt, client.ID, client.IP, client.UserAgent, client.LastSeen.Format(time.RFC3339))
+	if err != nil {
+		log.Println("Error on saving:", err)
+	}
+}
+
+func DeleteClientFromDB(id string) {
+	_, err := db.Exec(`DELETE FROM clients WHERE id = ?;`, id)
+	if err != nil {
+		log.Println("Error on deleting client:", err)
+	}
+}
+
+func LoadClientsFromDB() []*Client {
+	rows, err := db.Query(`SELECT id, ip, user_agent, last_seen FROM clients;`)
+	if err != nil {
+		log.Println("Error on loading clients:", err)
+		return nil
+	}
+	defer rows.Close()
+
+	var clients []*Client
+	for rows.Next() {
+		var c Client 
+		var lastSeen string
+		err := rows.Scan(&c.ID, &c.IP, &c.UserAgent, &lastSeen)
+		if err != nil {
+			continue
+		}
+		c.LastSeen, _ = time.Parse(time.RFC3339, lastSeen)
+		clients = append(clients, &c)
+	}
+	return clients
+}
+
+
+// ------------------------------------
+// -- Agent related functions
+// ------------------------------------
+func createAgentTable() {
+	table := `
 	CREATE TABLE IF NOT EXISTS agents (
 		id TEXT PRIMARY KEY,
 		ip TEXT,
 		user_agent TEXT,
 		last_seen TEXT
 	);`
-	_, err = db.Exec(createTable)
+	_, err := db.Exec(table)
 	if err != nil {
 		log.Fatal("Error on creating 'agents' table:", err)
 	}

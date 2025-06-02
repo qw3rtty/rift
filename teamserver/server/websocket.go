@@ -22,7 +22,7 @@ func handleClient(conn *websocket.Conn, r *http.Request) {
 
 	ip, _, _ := net.SplitHostPort(r.RemoteAddr)
 	id := uuid.New().String()
-	agent := &Agent{
+	client := &Client{
 		ID:        id,
 		Conn:      conn,
 		IP:        ip,
@@ -30,12 +30,12 @@ func handleClient(conn *websocket.Conn, r *http.Request) {
 		UserAgent: r.UserAgent(),
 	}
 
-	AgManager.Register(agent)
-	fmt.Printf("[+] Agent connected: %s (%s)\n", id, ip)
+	ClManager.Register(client)
+	fmt.Printf("[+] Client connected: %s (%s)\n", id, ip)
 
 	defer func() {
-		AgManager.Unregister(id)
-		fmt.Printf("[-] Lost connection to agent: %s\n", id)
+		ClManager.Unregister(id)
+		fmt.Printf("[-] Lost connection to client: %s\n", id)
 	}()
 
 	for {
@@ -43,7 +43,7 @@ func handleClient(conn *websocket.Conn, r *http.Request) {
 		if err != nil {
 			break
 		}
-		agent.LastSeen = time.Now()
+		client.LastSeen = time.Now()
 		fmt.Printf("[>] %s: %s\n", id, string(msg))
 
 		err = conn.WriteMessage(websocket.TextMessage, []byte("task: ping"))
@@ -56,9 +56,9 @@ func handleClient(conn *websocket.Conn, r *http.Request) {
 func StartWebSocketServer(port int) {
 	InitDB()
 
-	agents := LoadAgentsFromDB()
-	fmt.Printf("[*] %d saved agents loaded:\n", len(agents))
-	for _, a := range agents {
+	clients := LoadClientsFromDB()
+	fmt.Printf("[*] %d saved clients loaded:\n", len(clients))
+	for _, a := range clients {
 		fmt.Printf("    ID: %s | IP: %s | LastSeen: %s\n", a.ID, a.IP, a.LastSeen.Format(time.RFC3339))
 	}
 

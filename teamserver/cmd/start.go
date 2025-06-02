@@ -31,10 +31,10 @@ var serverCmd = &cobra.Command{
 		go func() {
 			for {
 				time.Sleep(10 * time.Second)
-				agents := server.AgManager.List()
-				fmt.Printf("[#] Active Agents: %d\n", len(agents))
-				for _, a := range agents {
-					fmt.Printf("    ID: %s | IP: %s | LastSeen: %s\n", a.ID, a.IP, a.LastSeen.Format(time.RFC3339))
+				clients := server.ClManager.List()
+				fmt.Printf("[#] Active clients: %d\n", len(clients))
+				for _, c := range clients {
+					fmt.Printf("    ID: %s | IP: %s | LastSeen: %s\n", c.ID, c.IP, c.LastSeen.Format(time.RFC3339))
 				}
 			}
 		}()
