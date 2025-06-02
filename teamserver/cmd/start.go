@@ -31,7 +31,7 @@ var serverCmd = &cobra.Command{
 		go func() {
 			for {
 				time.Sleep(10 * time.Second)
-				agents := server.Manager.List()
+				agents := server.AgManager.List()
 				fmt.Printf("[#] Active Agents: %d\n", len(agents))
 				for _, a := range agents {
 					fmt.Printf("    ID: %s | IP: %s | LastSeen: %s\n", a.ID, a.IP, a.LastSeen.Format(time.RFC3339))

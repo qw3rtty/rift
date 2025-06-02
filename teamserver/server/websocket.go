@@ -30,11 +30,11 @@ func handleClient(conn *websocket.Conn, r *http.Request) {
 		UserAgent: r.UserAgent(),
 	}
 
-	Manager.Register(agent)
+	AgManager.Register(agent)
 	fmt.Printf("[+] Agent connected: %s (%s)\n", id, ip)
 
 	defer func() {
-		Manager.Unregister(id)
+		AgManager.Unregister(id)
 		fmt.Printf("[-] Lost connection to agent: %s\n", id)
 	}()
 

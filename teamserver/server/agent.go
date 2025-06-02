@@ -20,7 +20,7 @@ type AgentManager struct {
 	agents map[string]*Agent
 }
 
-var Manager = &AgentManager{
+var AgManager = &AgentManager{
 	agents: make(map[string]*Agent),
 }
 
