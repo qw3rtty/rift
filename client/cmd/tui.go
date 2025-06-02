@@ -19,7 +19,7 @@ var tuiCmd = &cobra.Command{
 
 		var agentsList *tview.List 
 		agentsList = tview.NewList()
-		agentsList.SetTitle("Agents").SetBorder(true)
+		agentsList.SetTitle("Sessions (Agents)").SetBorder(true)
 
 		var logView *tview.TextView
 		logView = tview.NewTextView()
@@ -65,16 +65,18 @@ var tuiCmd = &cobra.Command{
 
 		input.SetDoneFunc(func(key tcell.Key) {
 			if key == tcell.KeyEnter {
-				currentIndex := agentsList.GetCurrentItem()
-				if currentIndex < 0 {
-					return
-				}
-				agent, _ := agentsList.GetItemText(currentIndex)
+				//currentIndex := agentsList.GetCurrentItem()
+				//if currentIndex < 0 {
+				//	return
+				//}
+				//agent, _ := agentsList.GetItemText(currentIndex)
 				task := input.GetText()
 				input.SetText("")
-				msg := fmt.Sprintf("send:%s:%s", agent, task)
+				//msg := fmt.Sprintf("send:%s:%s", agent, task)
+				msg := fmt.Sprintf("send:%s:%s", "TEST", task)
 				conn.WriteMessage(websocket.TextMessage, []byte(msg))
-				fmt.Fprintf(logView, "[>] Send to %s: %s\n", agent, task)
+				//fmt.Fprintf(logView, "[>] Send to %s: %s\n", agent, task)
+				fmt.Fprintf(logView, "[>] Send to %s: %s\n", "TEST", task)
 			}
 		})
 
