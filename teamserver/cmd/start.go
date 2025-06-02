@@ -13,6 +13,18 @@ var serverCmd = &cobra.Command{
 	Use:   "server",
 	Short: "Starting the protal server...",
 	Run: func(cmd *cobra.Command, args []string) {
+
+		asciiArt := `
+		RRR   III  FFFFF  TTTTT
+		R  R   I   F        T
+		RRR    I   FFFF     T
+		R  R   I   F        T
+		R  R  III  F        T
+		`
+		// Ausgabe des ASCII-Art
+		fmt.Println(asciiArt)
+
+
 		fmt.Printf("[+] Starting the portal server on port %d (WebSocket)\n", port)
 
 		// Starte Logging-Goroutine für aktive Agents
