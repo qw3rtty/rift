@@ -4,7 +4,6 @@
 
 # Builds
 rift
-teamserver
 
 # Binaries for programs and plugins
 *.exe
