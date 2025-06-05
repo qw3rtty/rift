@@ -24,3 +24,13 @@ func CommandFactory(command string, runFunc func(cmd *cobra.Command, args []stri
 	}
 }
 
+// Check if given command is valid and exists
+func IsValidCommand(root *cobra.Command, name string) bool {
+	for _, cmd := range root.Commands() {
+		if cmd.Name() == name {
+			return true
+		}
+	}
+	return false
+}
+
