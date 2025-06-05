@@ -13,6 +13,13 @@ var riftCli = &cobra.Command{
 }
 
 func Execute() {
+
+	// Register dynamic commands
+	for cmd, fn := range commands {
+		c := CommandFactory(cmd, fn)
+		riftCli.AddCommand(c)
+	}
+
 	if err := riftCli.Execute(); err != nil {
 		os.Exit(1)
 	}
