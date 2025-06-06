@@ -73,7 +73,7 @@ var tuiCmd = &cobra.Command{
 				task := input.GetText()
 				input.SetText("")
 				//msg := fmt.Sprintf("send:%s:%s", agent, task)
-				msg := fmt.Sprintf("send:%s:%s", "TEST", task)
+				msg := fmt.Sprintf("%s", task)
 				conn.WriteMessage(websocket.TextMessage, []byte(msg))
 				//fmt.Fprintf(logView, "[>] Send to %s: %s\n", agent, task)
 				fmt.Fprintf(logView, "[>] Send to %s: %s\n", "TEST", task)

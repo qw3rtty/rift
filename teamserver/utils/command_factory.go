@@ -1,4 +1,4 @@
-package cmd
+package utils
 
 import (
 	"fmt"
@@ -6,12 +6,15 @@ import (
 )
 
 // Define dynamic commands with their entry functions
-var commands = map[string]func(cmd *cobra.Command, args []string) {
+var Commands = map[string]func(cmd *cobra.Command, args []string) {
 	"listener": func(cmd *cobra.Command, args []string) {
 		fmt.Println("Starting listener...")
 	},
 	"test": func(cmd *cobra.Command, args []string) {
 		fmt.Println("TEST 1 2 3")
+	},
+	"help": func(cmd *cobra.Command, args []string) {
+		fmt.Println("Help!")
 	},
 }
 
@@ -25,12 +28,12 @@ func CommandFactory(command string, runFunc func(cmd *cobra.Command, args []stri
 }
 
 // Check if given command is valid and exists
-func IsValidCommand(root *cobra.Command, name string) bool {
-	for _, cmd := range root.Commands() {
-		if cmd.Name() == name {
-			return true
-		}
-	}
+func IsValidCommand(name string) bool {
+    for c, _ := range Commands {
+        if c == name {
+            return true
+        }
+    }
 	return false
 }
 
