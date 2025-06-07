@@ -21,6 +21,10 @@ var tuiCmd = &cobra.Command{
 		agentsList = tview.NewList()
 		agentsList.SetTitle("Sessions (Agents)").SetBorder(true)
 
+		var listenerList *tview.List
+		listenerList = tview.NewList()
+		listenerList.SetTitle("Listener").SetBorder(true)
+
 		var logView *tview.TextView
 		logView = tview.NewTextView()
 		logView.SetTitle("Logs").SetBorder(true)
@@ -28,7 +32,10 @@ var tuiCmd = &cobra.Command{
 		input := tview.NewInputField().SetLabel("Command > ")
 
 		flex := tview.NewFlex().
+			AddItem(tview.NewFlex().SetDirection(tview.FlexRow).
 			AddItem(agentsList, 0, 1, true).
+			AddItem(listenerList, 0, 1, true),
+			0, 2, false).
 			AddItem(tview.NewFlex().SetDirection(tview.FlexRow).
 			AddItem(logView, 0, 3, false).
 			AddItem(input, 3, 1, true),
