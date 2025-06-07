@@ -2,13 +2,24 @@ package utils
 
 import (
 	"fmt"
+	"net/http"
 	"github.com/spf13/cobra"
 )
 
 // Define dynamic commands with their entry functions
 var Commands = map[string]func(cmd *cobra.Command, args []string) {
-	"listener": func(cmd *cobra.Command, args []string) {
-		fmt.Println("Starting listener...")
+	"listener": func(cmd *cobra.Command, args []string) { // TODO: Add flags to set settings
+		fmt.Println("[+] Starting listener...")
+		
+		http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+			fmt.Fprintf(w, "[i] You have hit %s\n", r.URL.Path)
+		})
+
+		addr := "localhost:4444" 
+		fmt.Printf("[+] Starting HTTP server on %s...\n", addr)
+		if err := http.ListenAndServe(addr, nil); err != nil {
+			fmt.Printf("[!] Failed to start server: %v\n", err)
+		}
 	},
 	"test": func(cmd *cobra.Command, args []string) {
 		fmt.Println("TEST 1 2 3")
