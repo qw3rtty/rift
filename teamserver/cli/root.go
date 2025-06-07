@@ -2,8 +2,6 @@ package cli
 
 import (
 	"os"
-	"teamserver/utils"
-
 	"github.com/spf13/cobra"
 )
 
@@ -14,13 +12,6 @@ var riftCli = &cobra.Command{
 }
 
 func Execute() {
-
-	// Register dynamic commands
-	for cmd, fn := range utils.Commands {
-		c := utils.CommandFactory(cmd, fn)
-		riftCli.AddCommand(c)
-	}
-
 	if err := riftCli.Execute(); err != nil {
 		os.Exit(1)
 	}

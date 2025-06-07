@@ -6,7 +6,7 @@ import (
 	"net"
 	"net/http"
 	"time"
-	"teamserver/utils"
+	"teamserver/cmd"
 
 	"github.com/gorilla/websocket"
 	"github.com/google/uuid"
@@ -47,14 +47,15 @@ func handleClient(conn *websocket.Conn, r *http.Request) {
 		client.LastSeen = time.Now()
 		fmt.Printf("[>] %s: %s\n", id, string(msg))
 
-        var command = utils.CommandFactory("help", utils.Commands["help"])
+        /*var command = utils.CommandFactory("help", utils.Commands["help"])
         if utils.IsValidCommand(string(msg)) {
             command = utils.CommandFactory(string(msg), utils.Commands[string(msg)])
         }
         command.SetArgs([]string{})
-        command.Execute()
+        command.Execute()*/
+		cmd.ExecuteCommand(string(msg))
 
-		err = conn.WriteMessage(websocket.TextMessage, []byte("Command '"+command.Name()+"' startet"))
+		err = conn.WriteMessage(websocket.TextMessage, []byte("Command '"+string(msg)+"' startet"))
 		if err != nil {
 			break
 		}
