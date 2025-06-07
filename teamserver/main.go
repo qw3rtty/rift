@@ -1,7 +1,7 @@
 package main
 
-import "teamserver/cmd"
+import "teamserver/cli"
 
 func main() {
-	cmd.Execute()
+	cli.Execute()
 }
