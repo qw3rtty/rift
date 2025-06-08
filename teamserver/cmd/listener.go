@@ -20,6 +20,7 @@ var listenerCmd = &cobra.Command{
 		})
 
 		hl := utils.NewHTTPListener(":4444", handler)
+		utils.HLManager.Register(hl)
 
 		if err := hl.Start(); err != nil {
 			fmt.Printf("[!] Failed to start listener: %v\n", err)
@@ -33,6 +34,7 @@ var listenerCmd = &cobra.Command{
 			fmt.Printf("[!] Failed to gracefully shutdown: %v\n", err)
 		}
 
+		utils.HLManager.Unregister(0)
 		fmt.Println("[i] Server gracefully stopped")
 	},
 }

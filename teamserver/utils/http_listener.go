@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"sync"
 	"context"
 	"crypto/tls"
 	"fmt"
@@ -24,6 +25,44 @@ type HTTPListener struct {
 	Listener          net.Listener  // Underlying network listener
 	Server            *http.Server  // HTTP server instance
 }
+
+type HTTPListenerManager struct {
+	sync.Mutex
+	count int
+	listeners map[int]*HTTPListener
+}
+
+var HLManager = &HTTPListenerManager {
+	count: 0,
+	listeners: make(map[int]*HTTPListener),
+}
+
+func (m *HTTPListenerManager) Register(listener *HTTPListener) {
+	m.Lock()
+	defer m.Unlock()
+	m.listeners[m.count] = listener
+	m.count++
+	//SaveListenerToDB(listener)
+}
+
+func (m *HTTPListenerManager) Unregister(id int) {
+	m.Lock()
+	defer m.Unlock()
+	delete(m.listeners, id)
+	m.count--
+	//DeleteListenerFromDB(id)
+}
+
+func (m *HTTPListenerManager) List() []*HTTPListener {
+	m.Lock()
+	defer m.Unlock()
+	list := make([]*HTTPListener, 0, len(m.listeners))
+	for _, a := range m.listeners {
+		list = append(list, a)
+	}
+	return list
+}
+
 
 // NewHTTPListener creates a new HTTPListener with the provided configuration.
 func NewHTTPListener(addr string, handler http.Handler) *HTTPListener {
