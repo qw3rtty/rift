@@ -16,6 +16,7 @@ var tuiCmd = &cobra.Command{
 	Short: "Start client to interact with teamserver",
 	Run: func(cmd *cobra.Command, args []string) {
 		app := tview.NewApplication()
+        app.EnableMouse(true)
 
 		var agentsList *tview.List 
 		agentsList = tview.NewList()
