@@ -32,11 +32,11 @@ var tuiCmd = &cobra.Command{
 
 		input := tview.NewInputField().SetLabel("Command > ")
 
-		flex := tview.NewFlex().
-			AddItem(tview.NewFlex().SetDirection(tview.FlexRow).
-			AddItem(agentsList, 0, 1, true).
-			AddItem(listenerList, 0, 1, true),
-			0, 2, false).
+		flex := tview.NewFlex().SetDirection(tview.FlexRow).
+			AddItem(tview.NewFlex().SetDirection(tview.FlexColumn).
+			AddItem(agentsList, 0, 1, false).
+			AddItem(listenerList, 0, 1, false),
+			0, 1, false).
 			AddItem(tview.NewFlex().SetDirection(tview.FlexRow).
 			AddItem(logView, 0, 3, false).
 			AddItem(input, 3, 1, true),
