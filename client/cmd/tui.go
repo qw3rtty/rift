@@ -18,19 +18,31 @@ var tuiCmd = &cobra.Command{
 		app := tview.NewApplication()
         app.EnableMouse(true)
 
+		// Make sure the screen itself uses the terminal default background
+		app.SetBeforeDrawFunc(func(screen tcell.Screen) bool {
+			screen.SetStyle(tcell.StyleDefault.Background(tcell.ColorDefault))
+			return false
+		})
+
 		var agentsList *tview.List 
 		agentsList = tview.NewList()
 		agentsList.SetTitle("Sessions (Agents)").SetBorder(true)
+		agentsList.SetBackgroundColor(tcell.ColorDefault)
 
 		var listenerList *tview.List
 		listenerList = tview.NewList()
 		listenerList.SetTitle("Listener").SetBorder(true)
+		listenerList.SetBackgroundColor(tcell.ColorDefault)
 
 		var logView *tview.TextView
 		logView = tview.NewTextView()
 		logView.SetTitle("Logs").SetBorder(true)
+		logView.SetBackgroundColor(tcell.ColorDefault)
 
 		input := tview.NewInputField().SetLabel("Command > ")
+		input.SetBackgroundColor(tcell.ColorDefault)
+		input.SetLabelColor(tcell.ColorDefault)
+		input.SetFieldBackgroundColor(tcell.ColorValid)
 
 		flex := tview.NewFlex().SetDirection(tview.FlexRow).
 			AddItem(tview.NewFlex().SetDirection(tview.FlexColumn).
@@ -41,6 +53,7 @@ var tuiCmd = &cobra.Command{
 			AddItem(logView, 0, 3, false).
 			AddItem(input, 3, 1, true),
 			0, 2, false)
+		flex.SetBackgroundColor(tcell.ColorDefault)
 
 		conn, _, err := websocket.DefaultDialer.Dial(serverURL, nil)
 		if err != nil {
